@@ -60,7 +60,8 @@ async def process_registration(message: types.Message, state: FSMContext) -> Non
 
             # Регистрация нового пользователя
             from utils import hash_password
-            user = User(username=login, password_hash=hash_password(password), telegram_id=message.from_user.id)
+            password_hashed = await hash_password(password)
+            user = User(username=login, password_hash=password_hashed, telegram_id=message.from_user.id)
             session.add(user)
             await session.commit()
             await message.answer("Регистрация прошла успешно!")
@@ -87,7 +88,7 @@ async def run_simulation(message: types.Message, state: FSMContext) -> None:
         if n <= 0 or n > 10:
             await message.answer("Введите целое число от 1 до 10.")
             return
-        result: int = simulate(n)
+        result: int = await simulate(n)
         result_bin = bin(result)[2:].zfill(2 ** n)
 
         await message.answer(f"Результат измерения: {result_bin}")
