@@ -12,6 +12,7 @@ from sqlalchemy.orm import declarative_base, relationship
 Base = declarative_base()
 
 
+# Таблица с пользователями
 class User(Base):
     __tablename__ = "users"
 
@@ -24,6 +25,7 @@ class User(Base):
     requests = relationship("Request", back_populates="user", cascade="all, delete-orphan")
 
 
+# Таблица с запросами пользователей
 class Request(Base):
     __tablename__ = "requests"
 
