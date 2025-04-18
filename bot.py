@@ -12,20 +12,27 @@ from cors import *
 bot: Bot = Bot(BOT_TOKEN)
 dp: Dispatcher = Dispatcher(storage=MemoryStorage())
 
+
 class RegisterState(StatesGroup):
     waiting_for_credentials = State()
+
 
 class SimulateState(StatesGroup):
     waiting_for_qubit_number = State()
 
+
 @dp.message(Command("start"))
 async def start(message: types.Message):
-    await message.answer("Добро пожаловать! Отправьте /register для регистрации или /simulate для запуска симуляции. Команда /history для посмотра истории запросов")
+    await message.answer(
+        "Добро пожаловать! Отправьте /register для регистрации или /simulate для запуска симуляции. "
+        "Команда /history для посмотра истории запросов")
+
 
 @dp.message(Command("register"))
 async def register(message: types.Message, state: FSMContext):
     await message.answer("Введите логин и пароль через пробел (пример: user123 password123)")
     await state.set_state(RegisterState.waiting_for_credentials)
+
 
 @dp.message(RegisterState.waiting_for_credentials)
 async def process_registration(message: types.Message, state: FSMContext):
@@ -42,10 +49,12 @@ async def process_registration(message: types.Message, state: FSMContext):
     except ValueError:
         await message.answer("Неверный формат. Введите логин и пароль через пробел.")
 
+
 @dp.message(Command("simulate"))
 async def handle_simulate_command(message: types.Message, state: FSMContext):
     await message.answer("Введите число кубитов от 1 до 10")
     await state.set_state(SimulateState.waiting_for_qubit_number)
+
 
 @dp.message(SimulateState.waiting_for_qubit_number)
 async def run_simulation(message: types.Message, state: FSMContext):
@@ -66,6 +75,7 @@ async def run_simulation(message: types.Message, state: FSMContext):
     except ValueError:
         await message.answer("Пожалуйста, отправьте целое число.")
 
+
 @dp.message(Command("history"))
 async def history(message: types.Message):
     user = await get_user_by_telegram_id(message.from_user.id)
@@ -77,11 +87,15 @@ async def history(message: types.Message):
     history_text = "\n".join(f"{r.timestamp}: {r.content}" for r in requests)
     await message.answer(history_text or "У вас пока нет запросов.")
 
+
 async def main():
     await dp.start_polling(bot)
+
 
 if __name__ == "__main__":
     async def startup():
         await init_db()
         await dp.start_polling(bot)
+
+
     asyncio.run(startup())
