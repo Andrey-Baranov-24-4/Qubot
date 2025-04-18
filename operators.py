@@ -1,5 +1,5 @@
 import numpy as np
-import aiogram
+
 
 # Создаю матрицу оператора Адамара (Hadamard gate)
 # Вход: ничего
@@ -36,6 +36,5 @@ async def simulate(n: int) -> int:
     state: np.ndarray = np.zeros(2 ** n)
     state[0] = 1  # Создаём начальное состояние
     hadamard_gates = [await h() for _ in range(n)]
-    state = await apply(state, *hadamard_gates) # Применяем оператор Адамара ко всем кубитам
+    state = await apply(state, *hadamard_gates)  # Применяем оператор Адамара ко всем кубитам
     return await observe(state)
-
