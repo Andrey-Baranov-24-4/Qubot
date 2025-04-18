@@ -1,7 +1,14 @@
 import bcrypt
+import asyncio
 
-def hash_password(password: str) -> str:
-    return bcrypt.hashpw(password.encode(), bcrypt.gensalt()).decode()
+async def hash_password(password: str) -> str:
+    return await asyncio.to_thread(
+        lambda: bcrypt.hashpw(password.encode(), bcrypt.gensalt()).decode()
+    )
 
-def check_password(password: str, hashed: str) -> bool:
-    return bcrypt.checkpw(password.encode(), hashed.encode())
+async def check_password(password: str, hashed: str) -> bool:
+    return await asyncio.to_thread(
+        lambda: bcrypt.checkpw(password.encode(), hashed.encode())
+    )
+
+
