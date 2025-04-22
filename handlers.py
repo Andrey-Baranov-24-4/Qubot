@@ -5,7 +5,6 @@ from aiogram.fsm.state import State, StatesGroup
 from aiogram import Dispatcher
 from db_utils import *
 from operators import simulate
-from zoneinfo import ZoneInfo
 
 
 # Класс состояния регистрации
@@ -46,7 +45,7 @@ async def process_registration(message: types.Message, state: FSMContext) -> Non
         login, password = message.text.strip().split()
 
         if await user_exists_by_telegram_id(message.from_user.id):
-            await message.answer("Пользователь уже зарегистрирован.")
+            await message.answer("Данный Telegram ID уже зарегистрирован.")
         elif await user_exists_by_login(login):
             await message.answer("Пользователь с таким логином уже существует.")
         else:
@@ -102,12 +101,7 @@ async def history(message: types.Message) -> None:
         return
 
     requests = await get_user_requests(user.id)
-
-    moscow_tz = ZoneInfo("Europe/Moscow")
-    history_text: str = "\n".join(
-        f"{r.timestamp.astimezone(moscow_tz).strftime('%Y-%m-%d %H:%M:%S')}: {r.content}"
-        for r in requests
-    )
+    history_text: str = "\n".join(f"{r.timestamp}: {r.content}" for r in requests)
     await message.answer(history_text or "У вас пока нет запросов.")
 
 
