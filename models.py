@@ -34,4 +34,5 @@ class Request(Base):
     content = Column(String, nullable=False)
     timestamp = Column(DateTime, server_default=func.now())
 
+    # связь с таблицей пользователей
     user = relationship("User", back_populates="requests")
