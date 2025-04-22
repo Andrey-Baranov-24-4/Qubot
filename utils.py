@@ -2,7 +2,7 @@ import bcrypt
 import asyncio
 
 
-# Хеширую пароль с использованием алгоритма bcrypt (в отдельном потоке, чтобы не блокировать event loop)
+# Хеширую пароль с использованием алгоритма bcrypt
 # Вход: строка с паролем
 # Выход: строку с хешем пароля
 async def hash_password(password: str) -> str:
